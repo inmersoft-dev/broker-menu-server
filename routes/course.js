@@ -21,14 +21,14 @@ router.post("/save", async (req, res) => {
         log(info("Saving menu"));
         load.start();
         try {
-          const { user, menuName, menu, types } = req.body;
-          const result = await save(user, menuName, menu, types);
+          const { title, url, price, description, photo } = req.body;
+          const result = await save(title, url, price, description, photo);
           load.stop();
           if (result.status === 200) {
-            log(good(`${menuName} from ${user} saved successful`));
+            log(good(`${title} from ${user} saved successful`));
             res.send(result);
           } else if (result.status === 422) {
-            log(error(`${menuName} from ${user} ${result.data.error}`));
+            log(error(`${title} from ${user} ${result.data.error}`));
             res.send(result);
           } else {
             log(error(result.error));
@@ -48,17 +48,17 @@ router.post("/save", async (req, res) => {
 });
 
 router.get("/fetch", async (req, res) => {
-  log(info("Fetching menu"));
+  log(info("Fetching course"));
   load.start();
   try {
-    const { user, menuName } = req.query;
-    const result = await fetch(user, menuName);
+    const { id } = req.query;
+    const result = await fetch(id);
     load.stop();
     if (result.status === 200) {
-      log(good(`${menuName} from ${user} fetched successful`));
+      log(good(`${id} fetched successful`));
       res.send(result);
     } else if (result.status === 422) {
-      log(error(`${menuName} from ${user} ${result.data.error}`));
+      log(error(`${id} ${result.data.error}`));
       res.send(result);
     } else {
       log(error(result.error));
@@ -72,13 +72,13 @@ router.get("/fetch", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
-  log(info("Fetching all menus"));
+  log(info("Fetching all courses"));
   load.start();
   try {
     const result = await fetchAll();
     load.stop();
     if (result.error == undefined) {
-      log(good(`all menus fetched successful`));
+      log(good(`all courses fetched successful`));
       res.send(result);
     } else {
       log(error(result.error));

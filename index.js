@@ -1,5 +1,4 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const uuid = require("node-uuid");
 const crypto = require("crypto");
 
@@ -58,8 +57,8 @@ app.use(express.urlencoded({ extended: false }));
 
 // routes
 const auth = require("./routes/auth");
-const menu = require("./routes/menu");
+const course = require("./routes/course");
 app.use("/api/user/", auth);
-app.use("/api/menu/", menu);
+app.use("/api/course/", course);
 
 module.exports = app;
