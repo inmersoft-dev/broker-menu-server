@@ -1,5 +1,4 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const uuid = require("node-uuid");
 const crypto = require("crypto");
 
@@ -54,14 +53,13 @@ app.get("/auth", function (req, res) {
 // favicon
 // app.use(favicon);
 
-app.use(express.json({ limit: 1048576 }));
+app.use(express.json({ limit: 10048576 }));
 app.use(express.urlencoded({ extended: false }));
 
 // routes
 const auth = require("./routes/auth");
-const menu = require("./routes/menu");
-const { UploadFile } = require("./db/storage");
+const course = require("./routes/course");
 app.use("/api/user/", auth);
-app.use("/api/menu/", menu);
+app.use("/api/course/", course);
 
 module.exports = app;

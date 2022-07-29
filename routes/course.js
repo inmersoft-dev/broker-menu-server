@@ -1,7 +1,12 @@
 const express = require("express");
 // chalk
 const { error, log, info, good } = require("../utils/chalk");
-const { login, register, save } = require("../utils/auth/functions");
+const {
+  save,
+  fetch,
+  fetchAll,
+  deleteCourse,
+} = require("../utils/course/functions");
 
 const router = express.Router();
 
@@ -13,44 +18,22 @@ const { notFound } = require("../utils/pages");
 
 const load = require("../utils/loading");
 
-router.post("/validate", async (req, res) => {
-  if (req.headers.authorization) {
-    if (req.headers.authorization.indexOf("Bearer ") === 0) {
-      const verified = verifyBearer(req.headers.authorization);
-      if (verified) {
-        load.start();
-        try {
-          load.stop();
-          res.send({ status: 200, data: { message: "authorized" } });
-          return;
-        } catch (err) {
-          load.stop();
-          log(error(err));
-          res.sendStatus(500);
-          return;
-        }
-      }
-    }
-  }
-  res.send({ status: 200, data: { error: "unauthorized" } });
-});
-
 router.post("/save", async (req, res) => {
   if (req.headers.authorization) {
     if (req.headers.authorization.indexOf("Bearer ") === 0) {
       const verified = verifyBearer(req.headers.authorization);
       if (verified) {
-        log(info("Saving profile"));
+        log(info("Saving course"));
         load.start();
         try {
-          const { user, menuName, menuDescription, photo } = req.body;
-          const result = await save(user, menuName, menuDescription, photo);
+          const { id, title, url, price, description, photo } = req.body;
+          const result = await save(id, title, url, price, description, photo);
           load.stop();
           if (result.status === 200) {
-            log(good(`${user} logged successful`));
+            log(good(`${title} saved successful`));
             res.send(result);
           } else if (result.status === 422) {
-            log(error(`${user} ${result.data.error}`));
+            log(error(`${title} ${result.data.error}`));
             res.send(result);
           } else {
             log(error(result.error));
@@ -69,18 +52,52 @@ router.post("/save", async (req, res) => {
   res.send(notFound(req.baseUrl, "POST")).status(404);
 });
 
-router.post("/login", async (req, res) => {
-  log(info("Logging user"));
+router.post("/delete", async (req, res) => {
+  if (req.headers.authorization) {
+    if (req.headers.authorization.indexOf("Bearer ") === 0) {
+      const verified = verifyBearer(req.headers.authorization);
+      if (verified) {
+        log(info("Deleting course"));
+        load.start();
+        try {
+          const { id } = req.body;
+          const result = await deleteCourse(id);
+          load.stop();
+          if (result.status === 200) {
+            log(good(`${id} deleted successful`));
+            res.send(result);
+          } else if (result.status === 422) {
+            log(error(`${id} ${result.data.error}`));
+            res.send(result);
+          } else {
+            log(error(result.error));
+            res.send({ error: result.error });
+          }
+          return;
+        } catch (err) {
+          load.stop();
+          log(error(err));
+          res.sendStatus(500);
+          return;
+        }
+      }
+    }
+  }
+  res.send(notFound(req.baseUrl, "POST")).status(404);
+});
+
+router.get("/fetch", async (req, res) => {
+  log(info("Fetching course"));
   load.start();
   try {
-    const { user, password } = req.body;
-    const result = await login(user, password);
+    const { id } = req.query;
+    const result = await fetch(id);
     load.stop();
     if (result.status === 200) {
-      log(good(`${user} logged successful`));
+      log(good(`${id} fetched successful`));
       res.send(result);
     } else if (result.status === 422) {
-      log(error(`${user} ${result.data.error}`));
+      log(error(`${id} ${result.data.error}`));
       res.send(result);
     } else {
       log(error(result.error));
@@ -93,18 +110,14 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/register", async (req, res) => {
-  log(info("Registering user"));
+router.get("/", async (req, res) => {
+  log(info("Fetching all courses"));
   load.start();
   try {
-    const { user, password } = req.body;
-    const result = await register(user, password);
+    const result = await fetchAll();
     load.stop();
-    if (result.status === 200) {
-      log(good(`${user} registered successful`));
-      res.send(result);
-    } else if (result.status === 422) {
-      log(error(`${user} ${result.data.error}`));
+    if (result.error == undefined) {
+      log(good(`all courses fetched successful`));
       res.send(result);
     } else {
       log(error(result.error));

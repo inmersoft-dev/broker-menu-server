@@ -45,6 +45,17 @@ const Update = (table, key, value) => {
  * @param {string} table
  * @param {string} key
  */
+const Delete = (table, key) => {
+  let localTable = json.get(table);
+  if (localTable) delete localTable[key];
+  json.set(table, localTable);
+  json.save();
+};
+
+/**
+ * @param {string} table
+ * @param {string} key
+ */
 const GetValue = (table, key) => {
   const localTable = json.get(table);
   if (localTable) return json.get(table)[key];
@@ -64,4 +75,5 @@ module.exports = {
   GetValue,
   GetTable,
   Update,
+  Delete,
 };
