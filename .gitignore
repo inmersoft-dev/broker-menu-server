@@ -111,3 +111,4 @@ build/
 package-lock.json
 deploy_server.sh
 >>>>>>> firebaseV9
+node_modules
