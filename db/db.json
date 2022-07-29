@@ -1,0 +1,26 @@
+{
+  "users": {
+    "admin": {
+      "u": "admin",
+      "p": "25d55ad283aa400af464c76d713c07ad"
+    }
+  },
+  "courses": {
+    "casa": {
+      "id": "casa",
+      "title": "Casa",
+      "url": "https://www.youtube.com/watch?v=BHtdTLN8Qgs",
+      "price": "100",
+      "description": "El barco de sito",
+      "photo": ""
+    },
+    "el bardo": {
+      "id": "el bardo",
+      "title": "El bardo",
+      "url": "oookuiwww;;;;aasdwe@",
+      "price": "200",
+      "description": "Lorem ipsum dorom Lorem Lorem ipsum dorom Lorem Lorem ipsum dorom Lorem Lorem ipsum dorom Lorem",
+      "photo": ""
+    }
+  }
+}

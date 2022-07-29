@@ -6,6 +6,8 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+oauth.json
+
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
@@ -36,9 +38,10 @@ bower_components
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
-
+<<<<<<< HEAD
+=======
+build/
 # Dependency directories
-node_modules/
 jspm_packages/
 
 # TypeScript v1 declaration files
@@ -102,3 +105,9 @@ dist
 
 # TernJS port file
 .tern-port
+<<<<<<< HEAD
+=======
+build/
+package-lock.json
+deploy_server.sh
+>>>>>>> firebaseV9
