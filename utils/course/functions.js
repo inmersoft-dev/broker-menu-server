@@ -8,16 +8,28 @@ const { GetValue, Update, GetTable, Delete } = require("../../db/local");
  * @param {string} title - course title
  * @param {string} url - https://www.udemy.com/course/the-complete-javascript-course/
  * @param {string} price - number
+ * @param {string} shortDescription - "This a short description"
  * @param {string} description - "This is a description"
  * @param {string} photo - https://www.google.com/url?sa=i&amp;url=https%3A%2F%2Fwww.pexels.com%2Fsearch%2Fcourse%2F&amp;psig=AOvVaw3-_Q
  * @returns an object with a status and data property.
  */
-const save = async (id, title, url, price, description, photo) => {
+const save = async (
+  id,
+  title,
+  url,
+  price,
+  shortDescription,
+  description,
+  photo
+) => {
   try {
     let courseData = GetValue("courses", id.toLowerCase());
-    courseData = { title, url, price, description, photo };
+    courseData = { title, url, price, shortDescription, description, photo };
     Update("courses", id.toLocaleLowerCase(), courseData);
-    return { status: 200, data: { id, title, url, price, description, photo } };
+    return {
+      status: 200,
+      data: { id, title, url, price, shortDescription, description, photo },
+    };
   } catch (err) {
     return { error: String(err) };
   }
@@ -32,13 +44,15 @@ const fetch = async (title) => {
   try {
     const titleData = GetValue("courses", title.toLowerCase());
     if (titleData) {
-      const { title, url, price, description, photo } = titleData;
+      const { title, url, price, shortDescription, description, photo } =
+        titleData;
       return {
         status: 200,
         data: {
           title,
           url,
           price,
+          shortDescription,
           description,
           photo,
         },
