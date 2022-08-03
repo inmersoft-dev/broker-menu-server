@@ -26,8 +26,24 @@ router.post("/save", async (req, res) => {
         log(info("Saving course"));
         load.start();
         try {
-          const { id, title, url, price, description, photo } = req.body;
-          const result = await save(id, title, url, price, description, photo);
+          const {
+            id,
+            title,
+            url,
+            price,
+            shortDescription,
+            description,
+            photo,
+          } = req.body;
+          const result = await save(
+            id,
+            title,
+            url,
+            price,
+            shortDescription,
+            description,
+            photo
+          );
           load.stop();
           if (result.status === 200) {
             log(good(`${title} saved successful`));

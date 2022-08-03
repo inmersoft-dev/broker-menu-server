@@ -24,7 +24,15 @@ const save = async (
 ) => {
   try {
     let courseData = GetValue("courses", id.toLowerCase());
-    courseData = { title, url, price, shortDescription, description, photo };
+    courseData = {
+      id,
+      title,
+      url,
+      price,
+      shortDescription,
+      description,
+      photo,
+    };
     Update("courses", id.toLocaleLowerCase(), courseData);
     return {
       status: 200,
@@ -71,7 +79,6 @@ const fetch = async (title) => {
 const deleteCourse = async (id) => {
   try {
     const titleData = GetValue("courses", id.toLowerCase());
-    console.log(titleData, id);
     if (titleData) {
       Delete("courses", id.toLowerCase());
       return {
