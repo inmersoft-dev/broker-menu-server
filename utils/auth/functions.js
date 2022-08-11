@@ -109,7 +109,7 @@ const save = async (user, menuName, menuDescription, photo) => {
  * @param {string} password
  * @returns user data
  */
-const password = async (password) => {
+const savePassword = async (password) => {
   try {
     let userData = GetValue("users", "admin");
     userData = { ...userData, p: password };
@@ -129,5 +129,5 @@ module.exports = {
   login,
   register,
   save,
-  password,
+  savePassword,
 };

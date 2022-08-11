@@ -1,7 +1,7 @@
 const express = require("express");
 // chalk
 const { error, log, info, good } = require("../utils/chalk");
-const { login, register, save, password } = require("../utils/auth/functions");
+const { login, register, save, savePassword } = require("../utils/auth/functions");
 
 const router = express.Router();
 
@@ -22,7 +22,7 @@ router.post("/password", async (req, res) => {
         load.start();
         try {
           const { password } = req.body;
-          const result = await save(password);
+          const result = await savePassword(password);
           load.stop();
           if (result.status === 200) {
             log(good("password successful"));
