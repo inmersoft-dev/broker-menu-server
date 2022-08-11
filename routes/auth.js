@@ -1,7 +1,7 @@
 const express = require("express");
 // chalk
 const { error, log, info, good } = require("../utils/chalk");
-const { login, register, save } = require("../utils/auth/functions");
+const { login, register, save, password } = require("../utils/auth/functions");
 
 const router = express.Router();
 
@@ -12,6 +12,40 @@ const { verifyBearer } = require("../utils/secure");
 const { notFound } = require("../utils/pages");
 
 const load = require("../utils/loading");
+
+router.post("/password", async (req, res) => {
+  if (req.headers.authorization) {
+    if (req.headers.authorization.indexOf("Bearer ") === 0) {
+      const verified = verifyBearer(req.headers.authorization);
+      if (verified) {
+        log(info("Saving password"));
+        load.start();
+        try {
+          const { password } = req.body;
+          const result = await save(password);
+          load.stop();
+          if (result.status === 200) {
+            log(good("password successful"));
+            res.send(result);
+          } else if (result.status === 422) {
+            log(error(`${result.data.error}`));
+            res.send(result);
+          } else {
+            log(error(result.error));
+            res.send({ error: result.error });
+          }
+          return;
+        } catch (err) {
+          load.stop();
+          log(error(err));
+          res.sendStatus(500);
+          return;
+        }
+      }
+    }
+  }
+  res.send(notFound(req.baseUrl, "POST")).status(404);
+});
 
 router.post("/validate", async (req, res) => {
   if (req.headers.authorization) {

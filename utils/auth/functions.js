@@ -104,8 +104,30 @@ const save = async (user, menuName, menuDescription, photo) => {
   }
 };
 
+/**
+ *
+ * @param {string} password
+ * @returns user data
+ */
+const password = async (password) => {
+  try {
+    let userData = GetValue("users", "admin");
+    userData = { ...userData, p: password };
+    Update("users", "admin", userData);
+    return {
+      status: 200,
+      data: {
+        user: "admin",
+      },
+    };
+  } catch (err) {
+    return { error: String(err) };
+  }
+};
+
 module.exports = {
   login,
   register,
   save,
+  password,
 };
