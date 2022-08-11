@@ -11,7 +11,7 @@ const {
 const router = express.Router();
 
 // auth
-const { verifyBearer } = require("../utils/secure");
+const { verifyBearer, headers } = require("../utils/secure");
 
 // pages
 const { notFound } = require("../utils/pages");
@@ -19,6 +19,7 @@ const { notFound } = require("../utils/pages");
 const load = require("../utils/loading");
 
 router.post("/save", async (req, res) => {
+  res.set({ ...headers });
   if (req.headers.authorization) {
     if (req.headers.authorization.indexOf("Bearer ") === 0) {
       const verified = verifyBearer(req.headers.authorization);
@@ -53,6 +54,7 @@ router.post("/save", async (req, res) => {
 });
 
 router.post("/delete", async (req, res) => {
+  res.set({ ...headers });
   if (req.headers.authorization) {
     if (req.headers.authorization.indexOf("Bearer ") === 0) {
       const verified = verifyBearer(req.headers.authorization);
@@ -87,6 +89,7 @@ router.post("/delete", async (req, res) => {
 });
 
 router.get("/fetch", async (req, res) => {
+  res.set({ ...headers });
   log(info("Fetching course"));
   load.start();
   try {
@@ -111,6 +114,7 @@ router.get("/fetch", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
+  res.set({ ...headers });
   log(info("Fetching all courses"));
   load.start();
   try {
