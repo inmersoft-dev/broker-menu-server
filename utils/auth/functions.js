@@ -2,7 +2,7 @@
 
 const uuid = require("node-uuid");
 
-const { GetValue, Insert, Update } = require("../../db/controller");
+const { GetValue, Insert, Update } = require("../../db/local");
 
 const { keys } = require("../secure");
 
@@ -23,11 +23,9 @@ const giveToken = () => {
 const login = async (user, password) => {
   let theUser = {};
   try {
-    const data = await GetValue("users", user.toLowerCase());
+    const data = GetValue("users", user.toLowerCase());
     if (data !== undefined) {
-      // @ts-ignore
       theUser.p = data.p;
-      // @ts-ignore
       theUser.m = data.m;
       if (theUser.p.toLowerCase() === password.toLowerCase()) {
         const token = Buffer.from(uuid.v4()).toString("base64");
@@ -58,7 +56,7 @@ const login = async (user, password) => {
  */
 const register = async (user, password) => {
   try {
-    const data = await GetValue("users", user.toLowerCase());
+    const data = GetValue("users", user.toLowerCase());
     if (data === undefined) {
       Insert("users", user.toLowerCase(), { u: user, p: password, m: user });
       const token = Buffer.from(uuid.v4()).toString("base64");
@@ -89,9 +87,7 @@ const register = async (user, password) => {
  */
 const save = async (user, menuName, menuDescription, photo) => {
   try {
-    let userData = await GetValue("users", user.toLowerCase());
-    console.log(userData);
-    // @ts-ignore
+    let userData = GetValue("users", user.toLowerCase());
     userData = { ...userData, m: menuName, d: menuDescription, ph: photo };
     Update("users", user.toLocaleLowerCase(), userData);
     return {
@@ -108,8 +104,30 @@ const save = async (user, menuName, menuDescription, photo) => {
   }
 };
 
+/**
+ *
+ * @param {string} password
+ * @returns user data
+ */
+const savePassword = async (password) => {
+  try {
+    let userData = GetValue("users", "admin");
+    userData = { ...userData, p: password };
+    Update("users", "admin", userData);
+    return {
+      status: 200,
+      data: {
+        user: "admin",
+      },
+    };
+  } catch (err) {
+    return { error: String(err) };
+  }
+};
+
 module.exports = {
   login,
   register,
   save,
+  savePassword,
 };
